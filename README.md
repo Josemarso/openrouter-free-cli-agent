@@ -47,7 +47,7 @@ Tool call looping was a particularly great lesson and an interesting challenge, 
 
 On paper, the OpenRouter routing should automatically pick a model that suits the request needs (tool calling included), but in practice it seems to prioritize the quick selection of an available model instead of waiting for a fitting one. To maximize the number of successful requests the program narrows the model pool to those that support tool calls, but even so it sometimes prioritizes giving a response within a time window and picks up an unfitting model
 
-<p align="center">ADVICE: if this becomes a problem it can be easily solved by changing the MODEL variable from openrouter/free to a fixed tool-friendly model.</p>
+<p align="center">[ ADVICE: if this becomes a problem it can be easily solved by changing the MODEL variable from openrouter/free to a fixed tool-friendly model ]</p>
 
 On the same note, while implementing the image input tool I was surprised to see that OpenRouter doesn’t support input modality filters for its routing (not at the moment this repository is published). To be fair, there are not many models that support image input for free, so to maximize successful image-input requests without narrowing the model pool again (and risking the incresingly limited model availability to impact efficiency), the program doesn’t brute-force image-friendly models from the get-go, instead it waits for a tool call that requires image read and then it delivers a two-message reply that triggers OpenRouter’s routing to an image-friendly model: 
 1. Message 1 ( ‘role’: ‘tool’ ): confirms tool success and redirects to the next message for further instructions
