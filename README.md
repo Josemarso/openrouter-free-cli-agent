@@ -2,9 +2,9 @@
 A Python-based CLI agent for openrouter/free (dynamic in-runtime selection of free AI models). This agent features built-in tool support for processing local images as input (via base64-enconded strings), reading/writing files, and executing bash commands.
 
 
-## 🧱 TECHNOLOGIES
+## 🧱 STACK
 *	OpenRouter API
-*	Multimodal tools
+*	Multimodal AI Agent tools
 *	Python
 *	Shell
 
@@ -39,15 +39,30 @@ This should fix dependency version incompatibilities.
 
 
 ## 💡 CHALLENGES & LEARNINGS
-This is a cool project to learn firsthand how models process requests and how they structure their responses in a list of choices with their respective attributes and metadata. Tool call looping was also a great lesson and an interesting challenge, and that's because openrouter/free picks up a model every time it’s called during the request loop, and it doesn’t always find an available model that supports tools (availability depends on a variety of factors such as model demand); to help you keep track, the program shows through the terminal what model is being used at the moment (you’ll see the model tends to change between tool calls), it looks like this:
+This is a cool project to learn firsthand how models process requests and how they structure their responses in a list of choices with their respective attributes and metadata.
+
+Tool call looping was a particularly great lesson and an interesting challenge, and that's because openrouter/free picks up a model every time it’s called during the request loop but it doesn’t always find an available model that supports tools (availability depends on a variety of factors such as model demand). To help you keep track, the program shows through the terminal what model is being used at the moment (you’ll see the model tends to change between tool calls), it looks like this:
 
 ![App screenshot showing the message for OpenRouter model selection](./assets/screenshot_model_selection_message.png)
 
-On paper, the OpenRouter routing should automatically pick a model that suits the request needs (tool calling included), but in practice it seems to prioritize the quick selection of an available model instead of waiting for a fitting one. To maximize the number of successful requests the program narrows the model pool to those that support tool calls, but even so it sometimes prioritizes giving a response within a time window and picks up an unfitting model (ADVICE: if this becomes a problem it can be easily solved by changing the MODEL variable from openrouter/free to a fixed tool-friendly model).
+On paper, the OpenRouter routing should automatically pick a model that suits the request needs (tool calling included), but in practice it seems to prioritize the quick selection of an available model instead of waiting for a fitting one. To maximize the number of successful requests the program narrows the model pool to those that support tool calls, but even so it sometimes prioritizes giving a response within a time window and picks up an unfitting model
 
-To implement the image input tool, I was surprised to find out OpenRouter doesn’t support input modality filters for its routing (not at the moment this repository is published). To be fair, there are not many models that support image input for free, so to maximize successful image-input request without narrowing the model pool to the point where model availability impacts efficiency, the program doesn’t brute-force image-friendly models from the get-go, instead it waits for a tool call that requires image read and then it delivers a two-message reply that triggers OpenRouter’s routing to an image-friendly model: 
+<p align="center">ADVICE: if this becomes a problem it can be easily solved by changing the MODEL variable from openrouter/free to a fixed tool-friendly model.</p>
+
+On the same note, while implementing the image input tool I was surprised to see that OpenRouter doesn’t support input modality filters for its routing (not at the moment this repository is published). To be fair, there are not many models that support image input for free, so to maximize successful image-input requests without narrowing the model pool again (and risking the incresingly limited model availability to impact efficiency), the program doesn’t brute-force image-friendly models from the get-go, instead it waits for a tool call that requires image read and then it delivers a two-message reply that triggers OpenRouter’s routing to an image-friendly model: 
 1. Message 1 ( ‘role’: ‘tool’ ): confirms tool success and redirects to the next message for further instructions
 1. Message 2 ( ‘role’: ‘user’ ): contains the image data in a format that triggers OpenRouter to re-route the request to an image-friendly model.
+
+
+## 💭 HOW CAN IT BE IMPROVED?
+*   Add HITL (Human-in-the-loop) support for bash commands.
+*   Add web-search tool.
+*   Add audio-input tool.
+*   ... Pick a feature, ad astra 🌠
+
+
+## 🍿 VIDEO SHOWCASE
+https://github.com/user-attachments/assets/455a8a48-3404-40b7-b31b-681ba3344db8
 
 
 ## ⚔️ It’s dangerous to go alone, take this SECURITY ADVICE
